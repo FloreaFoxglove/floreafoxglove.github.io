@@ -1,2 +1,2 @@
 # page
-Florea Foxglove's main page!
+main page
