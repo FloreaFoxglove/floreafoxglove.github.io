@@ -1,0 +1,57 @@
+/* generics */
+*{
+    font-family: monospace;
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+button{
+    padding: 12px 18px;
+    outline: unset;
+    border: unset;
+    background: darkred;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover{
+    transform: translateY(2px);
+    background: firebrick;
+}
+
+main{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    background: dimgray;
+    transition: flex-shrink 0.2s ease;
+}
+
+nav{
+    flex-shrink: 1;
+    min-width: 256px;
+    height: 100vh;
+    background: darkred;
+}
+
+/* specifics */
+body>.container{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+button.tools{
+    border-radius: 12px 0 0 12px;
+    position: absolute;
+    bottom: 12px;
+    right: 0;
+}
+

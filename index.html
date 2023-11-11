@@ -1,11 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: monospace;
+            background: gainsboro;
+        }
+
+        body>.container{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-direction: column;
+        }
+
+        #title{
+            width: 100%;
+            height: 96px;
+            background: dimgrey;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body>.container>a{
+            text-decoration: none;
+            background: gray;
+            color: white;
+            padding: 12px;
+            margin: 12px;
+        }
+        body>.container>a:hover{
+            background: lightgray;
+            color: dimgrey;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>florea__landing</title>
 </head>
 <body>
-    hello world 2
+    <div class="container">
+        <div id="title">
+            proceed
+        </div>
+        <a href="practicetool/">dance practice tool</a>
+    </div>
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metronome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+    <script src="jquery-3.6.0.min.js"></script>
+</head>
+
+<!--
+
+Feature List:
+-Manual BPM Adjustment
+
+-Set BPM by Timing
+
+-Timer
+	mm:ss
+
+-Speed-up
+	cycles
+	BPM increase
+
+-Tick sounds
+
+-->
+
+<body>
+    <div id="container">
+
+        <div class="page currentpage" id="options">
+            <div class="innerbox">
+                <h2>Metronome Settings</h2>
+    
+                <div class="item">
+                    <p>BPM</p>
+                    <input type="number" name="setting-bpm" id="setBPM" value="100" placeholder="set a number">
+                    <button id="timingBPMbutton">Set by Timing</button>
+                </div>
+    
+                <div class="item hidden">
+                    <p>Timer</p>
+                    <input type="number" name="setting-timer" id="setTimer" placeholder="in minutes" value="" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                </div>
+    
+                <div class="item hidden">
+                    <p>Speed-up</p>
+                    <div>
+                        <input type="checkbox" name="setting-speed" id="setSpeed">
+                        <input type="number" name="setting-maxspeed" id="setSpdMin" placeholder="min" maxlength="3" disabled>
+                        <input type="number" name="setting-maxspeed" id="setSpdMax" placeholder="max" maxlength="3" disabled>
+                        <input type="number" name="setting-cycles" id="setSpdCycles" placeholder="cyc" maxlength="2" disabled>
+                        <input type="number" name="setting-increase" id="setSpdIncrease" placeholder="inc" maxlength="2" disabled>
+                        
+                    </div>
+                </div>
+    
+                <div class="item hidden">
+                    <p>Song URL (Optional)</p>
+                    <input type="text" name="setVideo" id="setSong" placeholder="leave empty if none">
+                    <input type="number" name="setOffset" id="setSongOffset" placeholder="in ms" maxlength="4">
+                </div>
+    
+                <button id="button-start">Start</button>
+            </div>
+        </div>
+
+        <div class="page" id="displayBPM">
+            <div id="bpmbg"></div>
+            <div class="innerbox">
+                <h2>Tap to set BPM</h2>
+                <p id="bpmpreview">-</p>
+                <button id="bpmconfirm">Confirm</button>
+                <button id="bpmcancel">Cancel</button>
+            </div>
+            <ul>
+            </ul>
+        </div>
+
+        <div class="page" id="displayPB">
+            <div id="pbbg"></div>
+            <div class="innerbox">
+                <p id="pbSpeed">BPM: -</p>
+                <button id="pbStop">Stop</button>
+            </div>
+        </div>
+        
+
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
