@@ -10,6 +10,43 @@
 <body>
     <div class="container">
         <main>
+            <div id="playerContainer" data-fs="false">
+                <div id="player"></div>
+                <!-- <img src="img/0.jpg" alt="thumbnail"> -->
+                <div id="thumb"></div>
+                <div id="controls">
+                    <button class="play">play</button>
+                    <button class="fullscreen">fullscreen</button>
+                </div>
+            </div>
+            <!-- <iframe id="player" width="560" height="315" src="https://www.youtube.com/embed/ZpbmIKyhmWA?enablejsapi=1&version=3"></iframe> -->
+            <input type="text" id="videoUrl">
+            <button class="confirm">Confirm</button>
+            <span class="option">
+                <input type="checkbox" id="mirror">
+                mirror
+            </span>
+            <span class="option">
+                <input type="text">
+                starttime
+            </span>
+            <span class="option">
+                <input type="checkbox">
+                endtime
+            </span>
+            <span class="option">
+                <input type="checkbox">
+                loop rest time
+            </span>
+            <span class="option">
+                <input type="checkbox">
+                loop
+            </span>
+            
+            <!-- <button class="mirror">Confirm</button> -->
+            <div class="console">
+                <div><span>playtime</span> || <span id="playtime"></span></div>
+            </div>
             <button class="tools">More Tools</button>
         </main>
         <nav data-active="false">
@@ -24,6 +61,7 @@
         </nav>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api" async></script>
     <script src="js/main.js"></script>
 </body>
 </html>
