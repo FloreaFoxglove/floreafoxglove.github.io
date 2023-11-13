@@ -40,12 +40,15 @@
                             <div id="controls">
                                 <!-- add frame advance and frame return -->
                                 <div class="c frame-prev"><i class="fa-solid fa-backward-step"></i></div>
-                                <div class="c restart"><i class="fa-solid fa-rotate"></i></div>
+                                <div class="c restart"><i class="fa-solid fa-rotate"></i><span>L</span></div>
                                 <!-- when in fullscreen, show time it will jump to -->
-                                <div class="c play"><i class="fa-solid fa-play"></i><i class="fa-solid fa-pause hidden"></i></div>
+                                <div class="c play"><i class="fa-solid fa-play"></i><i
+                                        class="fa-solid fa-pause hidden"></i></div>
                                 <div class="c fullscreen"><i class="fa-solid fa-expand"></i></div>
                                 <div class="c frame-next"><i class="fa-solid fa-forward-step"></i></div>
                                 <div id="scrubber">
+                                    <div id="loop-indicator" class="start"></div>
+                                    <div id="loop-indicator" class="end"></div>
                                     <div id="scrubberButton"></div>
                                 </div>
                             </div>
@@ -69,22 +72,26 @@
                                 <h3>Mirror</h3>
                                 <h3>Mirror</h3>
                                 <h2>Mirrored</h2>
+                                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                             </div>
                             <div class="cardBack">
                                 <h2>Mirror</h2>
                             </div>
                         </div>
 
-                        <div class="outerCard loop notImplemented" data-active="false">
+                        <div class="outerCard loop" data-active="false">
                             <div class="innerCard">
                                 <h3>Loop</h3>
                                 <h3>Loop</h3>
-                                <input type="text">
-                                starttime
-                                <input type="checkbox">
-                                endtime
-                                <input type="checkbox">
-                                loop rest time
+                                <div class="opt">
+                                    <span>Loop rest time (in seconds)</span>
+                                    <input type="number" value="0" min="0" max="60" step="3">
+                                </div>
+                                <div class="opt">
+                                    <button>Start Time <span class="time start">(mm:ss)</span></button>
+                                    <button>End Time <span class="time end">(mm:ss)</span></button>
+                                </div>
+                                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                             </div>
                             <div class="cardBack">
                                 <h2>Loop</h2>
@@ -95,21 +102,23 @@
                             <div class="innerCard">
                                 <h3>Speed</h3>
                                 <h3>Speed</h3>
+                                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                             </div>
                             <div class="cardBack">
                                 <h2>Speed</h2>
                             </div>
                         </div>
 
-                        <div class="outerCard zoom notImplemented" data-active="false">
+                        <!-- <div class="outerCard zoom notImplemented" data-active="false">
                             <div class="innerCard">
                                 <h3>Zoom</h3>
                                 <h3>Zoom</h3>
+                                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                             </div>
                             <div class="cardBack">
                                 <h2>Zoom</h2>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
