@@ -55,15 +55,26 @@ function onYouTubeIframeAPIReady() {
             "controls": 0,
             "iv_load_policy": 3,
             "playsinline": 1,
-            "rel": 0
+            "rel": 0,
+            "vq": "hd1080"
         },
         events: {
-            'onStateChange': flipPlaybackSymbol
+            'onStateChange': playerStateChange
           }
     });
     $("#player").removeAttr("allowfullscreen")
     $("#player").removeAttr("allow")
     player.addEventListener('onStateChange', flipPlaybackSymbol())
+}
+
+const playerStateChange = function () {
+    if (player.getPlayerState() == 1){
+        setInterval(function(){
+            var progress = (player.getCurrentTime()/player.getDuration()) * 100;
+            $("#scrubberButton").css("--progress", `${progress}%`);
+        },1000)
+    }
+    flipPlaybackSymbol();
 }
 
 const flipPlaybackSymbol = function () {
@@ -125,4 +136,5 @@ $(document).on("click", ".c.play", function () {
 $(document).on("click", ".c.fullscreen", function () {
     $("#optionContainer").toggleClass("fullscreen")
     $(".outerCard.play").toggleClass("fullscreen")
+    $("button.tools").toggleClass("fullscreen")
 })

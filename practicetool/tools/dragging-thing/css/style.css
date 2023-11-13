@@ -1,0 +1,122 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.hidden{
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* ui elements */
+#ui{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+#ui *{
+    pointer-events: auto;
+}
+
+#ui button{
+    position: absolute;
+    width: 128px;
+    height: 40px;
+    border-radius: 16px;
+    border: 2px solid darkgrey;
+    cursor: pointer;
+}
+
+#ui #btnUse{
+    bottom: 0;
+    right: 0;
+}
+#ui #btnSoul{
+    bottom: 0;
+    left: 0;
+}
+
+#ui #testInput{
+    height: 40px;
+    width: calc(100vw - (128px*2));
+    position: absolute;
+    left: 128px;
+    bottom: 0;
+    border-radius: 16px;
+    padding: 4px 12px;
+    filter:grayscale(1);
+}
+
+
+/* game elements */
+#playField{
+    transition: opacity 0.3s ease;
+}
+
+.core{
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.debug .core{
+    background: rgba(200, 80, 40, 0.1);
+}
+
+.core>.coreVisuals{
+    border-radius: 50%;
+    border: 2px solid black;
+    cursor: pointer;
+    position: relative;
+}
+
+.core:not([data-state="possessed"])>.coreVisuals{
+    cursor: unset;
+}
+
+.core[data-state="possessed"]>.coreVisuals{
+    background: mediumpurple;
+    border: 2px solid rebeccapurple;
+    animation: corePulse 2s linear infinite;
+}
+
+
+/* Movement visuals & their debuggers */
+#line{
+    position: absolute;
+    background: mediumslateblue;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s 0.1s ease, width 0.1s ease;
+    transform-origin: 6px 6px;
+}
+
+#lineQoLArea{
+    border-radius: 50%;
+    position: absolute;
+    transform-origin: center;
+    pointer-events: none;
+    transition: 0.02s ease;
+    animation: rotate 4s linear infinite, QoLPulse 1s linear infinite;
+}
+
+
+
+/* overlays */
+#overlaySoul{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: aquamarine;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}

@@ -1,0 +1,40 @@
+/* spritesheets */
+
+/* keyframe animations */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes corePulse {
+  0% {
+    box-shadow: 0 0 1px 1px rgba(102, 51, 153, 0.7);
+  }
+
+  50% {
+    box-shadow: 0 0 4px 4px rgba(102, 51, 153, 0.3);
+  }
+
+  100% {
+    box-shadow: 0 0 1px 1px rgba(102, 51, 153, 0.7);
+  }
+}
+
+@keyframes QoLPulse {
+  0% {
+    border: 4px dashed slateblue;
+  }
+
+  50% {
+    border: 3px dashed slateblue;
+  }
+
+  100% {
+    border: 4px dashed slateblue;
+  }
+}

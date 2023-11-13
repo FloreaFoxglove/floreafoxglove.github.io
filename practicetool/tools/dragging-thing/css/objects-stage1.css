@@ -1,0 +1,9 @@
+#graphics, #graphics>*{
+    position: absolute;
+    transform-origin: center;
+}
+
+#objWheel{
+    background-image: url("../img/testwheel.png");
+    transition: 4s ease;
+}
