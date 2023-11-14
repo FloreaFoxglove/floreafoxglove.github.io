@@ -34,21 +34,24 @@
                             <div id="playerContainer">
                                 <div id="player-content">
                                     <div id="player"></div>
+                                    <div id="rest-display" class="hidden">
+                                        <div class="banner"><h2>0</h2></div>
+                                    </div>
                                 </div>
-                                <!-- <div id="thumb"></div> -->
                             </div>
                             <div id="controls">
                                 <!-- add frame advance and frame return -->
+                                <div class="c loop-count hidden">3</div>
                                 <div class="c frame-prev"><i class="fa-solid fa-backward-step"></i></div>
-                                <div class="c restart"><i class="fa-solid fa-rotate"></i><span>L</span></div>
+                                <div class="c restart"><i class="fa-solid fa-rotate"></i><span class="hidden">Loop</span></div>
                                 <!-- when in fullscreen, show time it will jump to -->
                                 <div class="c play"><i class="fa-solid fa-play"></i><i
                                         class="fa-solid fa-pause hidden"></i></div>
                                 <div class="c fullscreen"><i class="fa-solid fa-expand"></i></div>
                                 <div class="c frame-next"><i class="fa-solid fa-forward-step"></i></div>
                                 <div id="scrubber">
-                                    <div id="loop-indicator" class="start"></div>
-                                    <div id="loop-indicator" class="end"></div>
+                                    <div class="loop-indicator hidden start"></div>
+                                    <div class="loop-indicator hidden end"></div>
                                     <div id="scrubberButton"></div>
                                 </div>
                             </div>
@@ -56,7 +59,7 @@
                     </div>
 
                     <!-- options -->
-                    <div id="optionContainer">
+                    <div id="optionContainer" class="hidden">
                         <div class="outerCard video" data-active="true">
                             <div class="innerCard">
                                 <h3>Video</h3>
@@ -84,12 +87,12 @@
                                 <h3>Loop</h3>
                                 <h3>Loop</h3>
                                 <div class="opt">
-                                    <span>Loop rest time (in seconds)</span>
-                                    <input type="number" value="0" min="0" max="60" step="3">
+                                    <span>Loop rest time <br>(in seconds)</span>
+                                    <input id="looprest" type="number" value="0" min="0" max="60" step="3">
                                 </div>
                                 <div class="opt">
-                                    <button>Start Time <span class="time start">(mm:ss)</span></button>
-                                    <button>End Time <span class="time end">(mm:ss)</span></button>
+                                    <button class="time start">Start Time<br><span>(mm:ss)</span></button>
+                                    <button class="time end">End Time<br><span>(mm:ss)</span></button>
                                 </div>
                                 <div class="close"><i class="fa-solid fa-xmark"></i></div>
                             </div>
@@ -98,11 +101,42 @@
                             </div>
                         </div>
 
-                        <div class="outerCard speed notImplemented" data-active="false">
+                        <div class="outerCard speed" data-active="false">
                             <div class="innerCard">
                                 <h3>Speed</h3>
                                 <h3>Speed</h3>
                                 <div class="close"><i class="fa-solid fa-xmark"></i></div>
+                                    <span>Playback Speed</span>
+                                    <select id="playback-speed">
+                                        <option value="0.1">10%</option>
+                                        <option value="0.2">20%</option>
+                                        <option value="0.3">30%</option>
+                                        <option value="0.4">40%</option>
+                                        <option value="0.5">50%</option>
+                                        <option value="0.6">60%</option>
+                                        <option value="0.7">70%</option>
+                                        <option value="0.8">80%</option>
+                                        <option value="0.9">90%</option>
+                                        <option value="1" selected>100%</option>
+                                        <option value="1.25">125%</option>
+                                        <option value="1.5">150%</option>
+                                        <option value="1.75">175%</option>
+                                        <option value="2">200%</option>
+                                    </select>
+                                <div class="loopspeed opt disabled">
+                                    <div class="opt">
+                                        <span>Speed up after loops:</span>
+                                        <select id="speed-rate">
+                                            <option value="0" selected>+0%</option>
+                                            <option value="0.1">+10%</option>
+                                            <option value="0.2">+20%</option>
+                                        </select>
+                                    </div>
+                                    <div class="opt">
+                                        <span>Amount of loops:</span>
+                                        <input type="number" id="speed-loops" min="1" max="10" value="3">
+                                    </div>
+                                </div>
                             </div>
                             <div class="cardBack">
                                 <h2>Speed</h2>
@@ -122,17 +156,11 @@
 
                     </div>
                 </div>
-
-
-                <!-- <button class="mirror">Confirm</button> -->
-                <div class="console" style="display: none;">
-                    <div><span>playtime</span> || <span id="playtime"></span></div>
-                </div>
                 <button class="tools">More Tools</button>
             </div>
 
         </main>
-        <nav data-active="false">
+        <!-- <nav data-active="false">
             <ul>
                 <li>
                     <a href="#__BLANK">Metronome</a>
@@ -141,9 +169,10 @@
                     <a href="#__BLANK">Tutorials</a>
                 </li>
             </ul>
-        </nav>
+        </nav> -->
     </div>
 
+    <script src="js/themes.js"></script>
     <script src="https://www.youtube.com/iframe_api" async></script>
     <script src="js/main.js"></script>
 </body>

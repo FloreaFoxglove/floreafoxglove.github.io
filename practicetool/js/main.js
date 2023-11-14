@@ -1,3 +1,18 @@
+var player;
+let loop = {
+    "active": false,
+    ".start": 0,
+    ".end": 0,
+    "rest": 0
+};
+
+let loops = {
+    "max": $("#speed-loops").val(),
+    "current": 0,
+    "rate": 0,
+    "playing": false
+}
+
 const clamp = function (min, max, val) {
     return Math.min(max, Math.max(min, val));
 }
@@ -17,13 +32,18 @@ $("button.tools").on("click", function () {
 
 
 // all the fun youtube api stuff
-var player;
 
 function onYouTubeIframeAPIReady() {
+    let id
+    if (localStorage.getItem("last-id")){
+        id = localStorage.getItem("last-id")
+    }else{
+        id = '8QFdjDeSXHk';
+    }
     player = new YT.Player('player', {
         height: '315',
         width: '560',
-        videoId: '8QFdjDeSXHk',
+        videoId: id,
         playerVars: {
             'playsinline': 1,
             "color": "white",
@@ -39,109 +59,38 @@ function onYouTubeIframeAPIReady() {
             'onReady': playerReady
         }
     });
-   
-}
-
-const playerReady = function () {
     $("#player").removeAttr("allowfullscreen")
     $("#player").removeAttr("allow")
-    player.addEventListener('onStateChange', flipPlaybackSymbol())
-    $("#videoTitle").text(player.getIframe().title)
-    setLoopTime(0, ".start");
-    setLoopTime(100, ".end");
+
 }
 
-const playerStateChange = function () {
-    if (player.getPlayerState() == 1) {
-        setInterval(function () {
-            var progress = (player.getCurrentTime() / player.getDuration()) * 100;
-            $("#scrubberButton").css("--progress", `${progress}%`);
-        }, 1000)
-    }
-    flipPlaybackSymbol();
+const getPlayPercent = function (time) {
+    return time / player.getDuration() * 100
 }
+
 
 const flipPlaybackSymbol = function () {
     if (player.getPlayerState() == 1) {
         $(".fa-play").addClass("hidden")
         $(".fa-pause").removeClass("hidden")
+        if (loops["playing"] == false) {
+            loops["max"] = $("#speed-loops").val();
+            loops["current"] = 0;
+            loops["rate"] = $("#speed-rate").val();
+        }
     }
     if (player.getPlayerState() == -1 || player.getPlayerState() == 0 || player.getPlayerState() == 2) {
         $(".fa-play").removeClass("hidden")
         $(".fa-pause").addClass("hidden")
+        if (loops["playing"] == false) {
+            loops["current"] = 0;
+            $(".c.loop-count").text(loops["current"])
+        }
     }
 }
 
 
-
-// player controls
-// playback
-let playInterval;
-$(document).on("click", ".c.play", function () {
-    flipPlaybackSymbol()
-    if (player.getPlayerState() != 1) {
-        player.playVideo()
-        // $("#thumb").animate({"opacity": "0"}, 200)
-        if (!playInterval) {
-            playInterval = setInterval(() => {
-                $("#playtime").text(Math.round(player.getCurrentTime() * 100) / 100)
-            }, 10);
-        }
-    } else {
-        // player.setPlaybackRate(0)
-        player.pauseVideo()
-        clearInterval(playInterval)
-    }
-})
-
-// fullscreen
-$(document).on("click", ".c.fullscreen", function () {
-    $("#optionContainer").toggleClass("fullscreen")
-    $(".outerCard.play").toggleClass("fullscreen")
-    $("button.tools").toggleClass("fullscreen")
-})
-
-// frame reverse
-$(document).on("click", ".c.frame-prev", function () {
-    player.seekTo(player.getCurrentTime()-(1/59));
-    $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
-})
-
-// frame advance
-$(document).on("click", ".c.frame-next", function () {
-    player.seekTo(player.getCurrentTime()+(1/59));
-    $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
-})
-
-// scrubber stuff
-$(document).on("mousedown", "#scrubberButton", function () {
-    let currentPlayState = player.getPlayerState();
-    let bounds = $("#scrubber")[0].getBoundingClientRect();
-    let scrubberWidth = bounds.right - bounds.left;
-    let clickPosition;
-    let percent;
-    $(document).on("mousemove", function (event) {
-        clickPosition = event.pageX - bounds.left;
-        percent = clamp(0, 1, (clickPosition / scrubberWidth));
-        $("#scrubberButton").css("--progress", `${percent*100}%`);
-        player.seekTo(player.getDuration() * percent, false)
-    })
-    $(document).on("mouseup", function () {
-        $("#scrubberButton").css("--progress", `${percent*100}%`);
-        player.seekTo(player.getDuration() * percent, true);
-        if (currentPlayState == 1){
-            player.playVideo();
-        }
-        $(document).off("mousemove");
-        $(document).off("mouseup");
-    })
-})
-
-
-
 // option cards
-
-
 
 // set video
 $(document).on("click", "button.confirm", function () {
@@ -160,15 +109,17 @@ $(document).on("click", "button.confirm", function () {
         inp = inp.split("&")[0]
         inp = inp.split("?")[0]
 
+        id = localStorage.setItem("last-id", inp)
         url = yt.concat(inp)
         player.cueVideoByUrl({
             'mediaContentUrl': url
         })
     }
-    $("#videoTitle").text(player.getIframe().title)
+    setLoopTime(0, ".start");
+    setLoopTime(100, ".end");
 })
 
-const cardFlip = function (el, func){
+const cardFlip = function (el, func) {
     $(el).animate({
         textIndent: 0
     }, {
@@ -195,7 +146,7 @@ const cardFlip = function (el, func){
 }
 
 // mirror iframe
-const mirrorVideo = function(){
+const mirrorVideo = function () {
     if ($(".outerCard.mirror").attr("data-active") == "true") {
         $("#player").css("transform", "scaleX(-1)")
     } else {
@@ -211,20 +162,29 @@ $(".outerCard.mirror .close").on("click", function () {
 })
 
 // loop video
-const activateLoop = function(){
-    return
+const activateLoop = function () {
+    $(".loop-indicator").toggleClass("hidden");
+    $(".c.restart>span").toggleClass("hidden");
+    $(".loopspeed").toggleClass("disabled");
+
+    if (loop["active"] == true) {
+        loop["active"] = false;
+    } else {
+        loop["active"] = true;
+    }
 }
 
-const setLoopTime = function(timePercent, el){
+const setLoopTime = function (timePercent, el) {
     let time = player.getDuration() * (timePercent / 100)
-    let minutes = Math.floor(time/60);
-    let seconds = (time - (minutes * 60))
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.round((time - (minutes * 60)))
     let secondstring = seconds;
-    if (seconds < 10){
+    if (seconds < 10) {
         secondstring = `0${seconds}`
     }
-    $(`.loop-indicator${el}`).css("--time", `${timePercent * 100}%`)
-    $(`span.time${el}`).text(`${minutes}:${secondstring}`)
+    loop[el] = time;
+    $(`.loop-indicator${el}`).css("--time", `${timePercent}%`)
+    $(`button.time${el} > span`).text(`${minutes}:${secondstring}`)
 }
 
 $(".outerCard.loop .cardBack").on("click", function () {
@@ -233,3 +193,238 @@ $(".outerCard.loop .cardBack").on("click", function () {
 $(".outerCard.loop .close").on("click", function () {
     cardFlip(".outerCard.loop", activateLoop);
 })
+
+const setLoopWithButton = function (el) {
+    let val = getPlayPercent(player.getCurrentTime());
+    setLoopTime(val, el);
+}
+const setLoopWithSlider = function (el) {
+    let val = getPlayPercent(loop[el]) / 100;
+    let bounds = $("#scrubber")[0].getBoundingClientRect();
+    let scrubberWidth = bounds.right - bounds.left;
+    let clickPosition;
+    $(document).on("mousemove", function (event) {
+        clickPosition = event.pageX - bounds.left;
+        val = clamp(0, 1, (clickPosition / scrubberWidth));
+        $(el).css("--time", `${val*100}%`);
+    })
+    $(document).on("mouseup", function () {
+        setLoopTime(val * 100, el);
+        $(document).off("mousemove");
+        $(document).off("mouseup");
+    })
+}
+$("button.time.start").on("click", function () {
+    setLoopWithButton(".start")
+})
+$("button.time.end").on("click", function () {
+    setLoopWithButton(".end")
+})
+
+$(".loop-indicator.start").on("mousedown", function () {
+    setLoopWithSlider(".start")
+})
+$(".loop-indicator.end").on("mousedown", function () {
+    setLoopWithSlider(".end")
+})
+
+$("#looprest").on("change", function () {
+    loop["rest"] = $("#looprest").val()
+})
+
+
+
+// speed
+const setSpeed = function (val) {
+    if (val) {
+        player.setPlaybackRate(parseFloat(val))
+    } else {
+        player.setPlaybackRate(1)
+    }
+}
+
+$(".outerCard.speed .cardBack").on("click", function () {
+    cardFlip(".outerCard.speed", setSpeed);
+})
+$(".outerCard.speed .close").on("click", function () {
+    cardFlip(".outerCard.speed", setSpeed);
+    $(".c.loop-count").addClass('hidden')
+    $("#speed-rate").val(0)
+})
+
+$("#playback-speed").on("change", function () {
+    setSpeed($("#playback-speed").val());
+})
+
+$("#speed-rate").on("change", function () {
+    if ($("#speed-rate").val() != 0) {
+        $(".c.loop-count").removeClass('hidden')
+        $(".c.loop-count").text(0)
+    } else {
+        $(".c.loop-count").addClass('hidden')
+    }
+})
+
+// player controls
+// playback
+let playInterval = 0;
+let restInterval = false;
+
+var ticksound = new Audio('../assets/sfx/tick2.wav');
+var ticksound2 = new Audio('../assets/sfx/tick2.wav');
+
+var current_sound = ticksound;
+
+function speedup() {
+    if (loops["rate"] > 0 && $("#playback-speed").val() < 1) {
+        loops["current"] += 1
+        if (loops["current"] >= loops["max"]) {
+            loops["current"] = 0;
+            
+            let newspeed = Math.round((parseFloat($("#playback-speed").val()) + parseFloat($("#speed-rate").val())) * 10) / 10
+            if (newspeed > 1){
+                newspeed = 1;
+            }
+            $("#playback-speed").val(String(newspeed)).change()
+            player.setPlaybackRate(newspeed)
+        }
+        $(".c.loop-count").text(loops["current"])
+    }
+}
+
+const restartAndLoop = function () {
+    if (loop["active"]) {
+        player.pauseVideo()
+        restInterval = loop["rest"];
+        if (restInterval > 0) {
+            $("#rest-display").removeClass("hidden")
+            $("#rest-display h2").text(restInterval)
+            let pause = setInterval(() => {
+                current_sound.play();
+                current_sound = ticksound2 ? ticksound : ticksound2
+                restInterval -= 1;
+                $("#rest-display h2").text(restInterval)
+                if (restInterval < 1) {
+                    speedup()
+                    clearInterval(pause)
+                    pause = false
+                    player.seekTo(loop[".start"])
+                    player.playVideo()
+                    restInterval = 0
+                    $("#rest-display").addClass("hidden")
+                }
+            }, 1000);
+        } else {
+            player.seekTo(loop[".start"])
+            player.playVideo()
+            speedup()
+        }
+    }
+}
+
+const playTimer = function () {
+    if (!playInterval) {
+        playInterval = setInterval(() => {
+            let progress = (player.getCurrentTime() / player.getDuration()) * 100;
+            $("#scrubberButton").css("--progress", `${progress}%`);
+            if (player.getCurrentTime() >= (loop[".end"])) {
+                loops["playing"] = true;
+                restartAndLoop();
+                setTimeout(()=>{
+                    loops["playing"] = false;
+                },3000)
+            }
+        }, 500);
+    }
+}
+
+$(document).on("click", ".c.play", function () {
+    flipPlaybackSymbol()
+    if (player.getPlayerState() != 1) {
+        player.playVideo()
+        // $("#thumb").animate({"opacity": "0"}, 200)
+        playTimer()
+    } else {
+        // player.setPlaybackRate(0)
+        player.pauseVideo()
+        clearInterval(playInterval)
+        playInterval = false
+    }
+})
+
+// fullscreen
+$(document).on("click", ".c.fullscreen", function () {
+    $("#optionContainer").toggleClass("fullscreen")
+    $(".outerCard.play").toggleClass("fullscreen")
+    $("button.tools").toggleClass("fullscreen")
+})
+
+// frame reverse
+$(document).on("click", ".c.frame-prev", function () {
+    player.seekTo(player.getCurrentTime() - (1 / 59));
+    $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
+})
+
+// frame advance
+$(document).on("click", ".c.frame-next", function () {
+    player.seekTo(player.getCurrentTime() + (1 / 59));
+    $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
+})
+
+// restart
+$(document).on("click", ".c.restart", function () {
+    if (loop["active"] == false) {
+        player.seekTo(0)
+    } else {
+        player.seekTo(loop[".start"])
+    }
+})
+
+// scrubber stuff
+$(document).on("mousedown", "#scrubberButton", function () {
+    let currentPlayState = player.getPlayerState();
+    let bounds = $("#scrubber")[0].getBoundingClientRect();
+    let scrubberWidth = bounds.right - bounds.left;
+    let clickPosition;
+    let percent;
+    $(document).on("mousemove", function (event) {
+        clickPosition = event.pageX - bounds.left;
+        percent = clamp(0, 1, (clickPosition / scrubberWidth));
+        $("#scrubberButton").css("--progress", `${percent*100}%`);
+        player.seekTo(player.getDuration() * percent, false)
+    })
+    $(document).on("mouseup", function () {
+        $("#scrubberButton").css("--progress", `${percent*100}%`);
+        player.seekTo(player.getDuration() * percent, true);
+        if (currentPlayState == 1) {
+            player.playVideo();
+        }
+        $(document).off("mousemove");
+        $(document).off("mouseup");
+    })
+})
+
+
+
+
+
+
+const playerReady = function () {
+    player.addEventListener('onStateChange', flipPlaybackSymbol())
+    $("#videoTitle").text(player.getIframe().title)
+    $("#optionContainer").removeClass("hidden")
+    setLoopTime(0, ".start");
+    setLoopTime(100, ".end");
+}
+
+const playerStateChange = function () {
+    if (player.getPlayerState() == 1) {
+        playTimer()
+    } else if (player.getPlayerState() == 0) {
+        restartAndLoop();
+    } else {
+        clearInterval(playInterval)
+        playInterval = false;
+    }
+    flipPlaybackSymbol();
+}

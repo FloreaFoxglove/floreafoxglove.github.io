@@ -114,7 +114,7 @@ h3 {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* specifics */
@@ -164,8 +164,7 @@ main>.background {
 .background>.side {
     width: 96px;
     height: 100vh;
-    /* background: var(--theme-fg-col); */
-    background-image: url("../img/pattern-ace.png");
+    background: url("../img/pattern-ace.png");
     background-size: 100% auto;
     background-repeat: repeat-y;
     position: absolute;
@@ -317,7 +316,7 @@ main>.content{
 }
 
 .outerCard.play>.innerCard>#playerContainer>#player-content,
-.outerCard.play>.innerCard>#playerContainer>#thumb {
+.outerCard.play>.innerCard>#playerContainer>#player-content>#rest-display {
     position: absolute;
     width: 100% !important;
     height: 100% !important;
@@ -332,6 +331,22 @@ main>.content{
 
 #player-content {
     position: relative;
+}
+#rest-display {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    top: 0;
+}
+#rest-display>.banner {
+    width: 100%;
+    background: var(--theme-fg-primary);
+    padding: 36px 0;
+    text-align: center;
+}
+#rest-display>.banner>h2 {
+    color: var(--theme-txt-primary);
 }
 
 #player {
@@ -367,6 +382,7 @@ main>.content{
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
     text-shadow: 2px 2px 1px black;
+    user-select: none;
 }
 
 #controls .c.play>i {
@@ -378,13 +394,13 @@ main>.content{
     font-size: 16px;
     font-weight: 800;
     position: absolute;
-    right: 6px;
+    left: 28px;
     bottom: 6px;
     border-radius: 50%;
     padding: 1px;
     line-height: 16px;
     background: var(--theme-bg-primary);
-    aspect-ratio: 1/1;
+    user-select: none;
 }
 
 #controls .c:hover {
@@ -419,7 +435,7 @@ main>.content{
     cursor: pointer;
 }
 
-#controls>#scrubber>#loop-indicator{
+#controls>#scrubber>.loop-indicator{
     --size: 8px;
     position: absolute;
     width: var(--size);
@@ -429,18 +445,18 @@ main>.content{
     box-shadow: 0 0 4px var(--theme-fg-primary);
     cursor: grab;
 }
-#controls>#scrubber>#loop-indicator.holding{
+#controls>#scrubber>.loop-indicator.holding{
     cursor: grabbing;
 }
 
-#controls>#scrubber>#loop-indicator.start{
+#controls>#scrubber>.loop-indicator.start{
     --time: 0%;
     left: calc(var(--time) - 2px); 
 }
 
-#controls>#scrubber>#loop-indicator.end{
+#controls>#scrubber>.loop-indicator.end{
     --time: 100%;
-    left: calc(var(--time) - 2px); 
+    left: calc(var(--time) + 2px); 
 }
 
 #optionContainer {
@@ -525,6 +541,7 @@ main>.content{
 }
 
 #optionContainer>.outerCard>.innerCard>.opt {
+    width: 100%;
     flex: 1;
     display: flex;
     padding: 4px;
@@ -560,37 +577,48 @@ main>.content{
 }
 .outerCard.loop .opt>button{
     padding: 12px 6px;
+    flex-grow: 1;
 }
 
 .outerCard.loop .opt:nth-of-type(2){
     align-items: flex-end !important;
 }
 
+.outerCard.speed .opt{
+    padding: 0 !important;
+    gap: 0 !important;
+}
+.outerCard.speed .opt>.opt{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
 
+.outerCard.speed .opt>span{
+    text-align: center;
+}
+.outerCard.speed .opt>.opt input, .outerCard.speed .opt>.opt select{
+    max-width: 48px;
+}
+.outerCard.speed .innerCard{
+    padding-top: 32px !important;
+}
 
-
-
+.opt.disabled{
+    pointer-events: none;
+    filter: grayscale(1) brightness(0.3);
+}
 
 
 
 button.tools {
     border-radius: 12px 0 0 12px;
     position: absolute;
-    bottom: 12px;
+    bottom: 256px;
     right: 0;
 }
 
 button.tools.fullscreen {
     display: none;
-}
-
-
-.console {
-    position: absolute;
-    width: 100%;
-    height: 160px;
-    bottom: 0;
-    color: white;
-    background: black;
-    outline: 1px solid white;
 }
