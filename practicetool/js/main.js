@@ -199,21 +199,40 @@ const setLoopWithButton = function (el) {
     setLoopTime(val, el);
 }
 const setLoopWithSlider = function (el) {
+    const setLoopSlider = function (e) {
+        clickPosition = e.pageX - bounds.left;
+        val = clamp(0, 1, (clickPosition / scrubberWidth));
+        $(el).css("--time", `${val*100}%`);
+    }
+    
+    const end = function(){
+        setLoopTime(val * 100, el);
+        $(document).off("mousemove");
+        $(document).off("vmousemove");
+        $(document).off("mouseup");
+        $(document).off("vmouseup");
+    }
+    
     let val = getPlayPercent(loop[el]) / 100;
     let bounds = $("#scrubber")[0].getBoundingClientRect();
     let scrubberWidth = bounds.right - bounds.left;
     let clickPosition;
     $(document).on("mousemove", function (event) {
-        clickPosition = event.pageX - bounds.left;
-        val = clamp(0, 1, (clickPosition / scrubberWidth));
-        $(el).css("--time", `${val*100}%`);
+        setLoopSlider(event);
+    })
+    $(document).on("vmousemove", function (event) {
+        setLoopSlider(event);
     })
     $(document).on("mouseup", function () {
-        setLoopTime(val * 100, el);
-        $(document).off("mousemove");
-        $(document).off("mouseup");
+        end()
+    })
+    $(document).on("vmouseup", function () {
+        end()
     })
 }
+
+
+
 $("button.time.start").on("click", function () {
     setLoopWithButton(".start")
 })
@@ -225,6 +244,13 @@ $(".loop-indicator.start").on("mousedown", function () {
     setLoopWithSlider(".start")
 })
 $(".loop-indicator.end").on("mousedown", function () {
+    setLoopWithSlider(".end")
+})
+
+$(".loop-indicator.start").on("vmousedown", function () {
+    setLoopWithSlider(".start")
+})
+$(".loop-indicator.end").on("vmousedown", function () {
     setLoopWithSlider(".end")
 })
 
@@ -381,19 +407,15 @@ $(document).on("click", ".c.restart", function () {
 })
 
 // scrubber stuff
-$(document).on("mousedown", "#scrubberButton", function () {
-    let currentPlayState = player.getPlayerState();
-    let bounds = $("#scrubber")[0].getBoundingClientRect();
-    let scrubberWidth = bounds.right - bounds.left;
-    let clickPosition;
-    let percent;
-    $(document).on("mousemove", function (event) {
-        clickPosition = event.pageX - bounds.left;
+const scrubVideo = function () {
+    const scrubMove = function (e) {
+        clickPosition = e.pageX - bounds.left;
         percent = clamp(0, 1, (clickPosition / scrubberWidth));
         $("#scrubberButton").css("--progress", `${percent*100}%`);
         player.seekTo(player.getDuration() * percent, false)
-    })
-    $(document).on("mouseup", function () {
+    }
+
+    const scrubOff = function () {
         $("#scrubberButton").css("--progress", `${percent*100}%`);
         player.seekTo(player.getDuration() * percent, true);
         if (currentPlayState == 1) {
@@ -401,9 +423,35 @@ $(document).on("mousedown", "#scrubberButton", function () {
         }
         $(document).off("mousemove");
         $(document).off("mouseup");
+        $(document).off("vmousemove");
+        $(document).off("vmouseup");
+    }
+    
+    let currentPlayState = player.getPlayerState();
+    let bounds = $("#scrubber")[0].getBoundingClientRect();
+    let scrubberWidth = bounds.right - bounds.left;
+    let clickPosition;
+    let percent;
+    $(document).on("mousemove", function (event) {
+        scrubMove(event)
     })
-})
+    $(document).on("mouseup", function () {
+        scrubOff()
+    })
+    $(document).on("vmousemove", function (event) {
+        scrubMove(event)
+    })
+    $(document).on("vmouseup", function () {
+        scrubOff()
+    })
+}
 
+$(document).on("mousedown", "#scrubberButton", function () {
+    scrubVideo()
+})
+$(document).on("vmousedown", "#scrubberButton", function () {
+    scrubVideo()
+})
 
 
 
