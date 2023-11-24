@@ -201,9 +201,11 @@ const setLoopWithButton = function (el) {
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
         alert(e.type)
-        if (e.type == 'touchmove'){
-            clickPosition = e.originalEvent.touches[0].pageX - bounds.left
-            alert(e.originalEvent.touches[0].pageX)
+        if (String(e.type) == 'touchmove'){
+            let touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            clickPosition = touch - bounds.left
+            alert(touch)
+            alert("yo")
         }else{
             clickPosition = e.pageX - bounds.left;
         }
@@ -420,7 +422,8 @@ $(document).on("click", ".c.restart", function () {
 const scrubVideo = function () {
     const scrubMove = function (e) {
         if (e.type == 'touchmove'){
-            clickPosition = e.originalEvent.touches[0].pageX - bounds.left
+            let touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            clickPosition = touch - bounds.left
         }else{
             clickPosition = e.pageX - bounds.left;
         }
