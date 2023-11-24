@@ -203,7 +203,7 @@ const setLoopWithSlider = function (el) {
         if (e.type == 'touchmove'){
             alert("yo")
             let touch = e.touches[0] || e.changedTouches[0];
-            clickPosition = touch - bounds.left
+            clickPosition = touch.pageX - bounds.left
             alert(clickPosition)
         }else{
             clickPosition = e.pageX - bounds.left;
@@ -422,7 +422,7 @@ const scrubVideo = function () {
     const scrubMove = function (e) {
         if (e.type == 'touchmove'){
             let touch = e.touches[0] || e.changedTouches[0];
-            clickPosition = touch - bounds.left
+            clickPosition = touch.pageX - bounds.left
         }else{
             clickPosition = e.pageX - bounds.left;
         }
