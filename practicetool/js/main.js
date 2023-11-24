@@ -200,7 +200,11 @@ const setLoopWithButton = function (el) {
 }
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
-        clickPosition = e.pageX - bounds.left;
+        if (e.type == 'touchmove'){
+            clickPosition = e.originalEvent.touches[0].pageX - bounds.left
+        }else{
+            clickPosition = e.pageX - bounds.left;
+        }
         val = clamp(0, 1, (clickPosition / scrubberWidth));
         $(el).css("--time", `${val*100}%`);
     }
@@ -413,7 +417,12 @@ $(document).on("click", ".c.restart", function () {
 // scrubber stuff
 const scrubVideo = function () {
     const scrubMove = function (e) {
-        clickPosition = e.pageX - bounds.left;
+        if (e.type == 'touchmove'){
+            clickPosition = e.originalEvent.touches[0].pageX - bounds.left
+        }else{
+            clickPosition = e.pageX - bounds.left;
+        }
+
         percent = clamp(0, 1, (clickPosition / scrubberWidth));
         $("#scrubberButton").css("--progress", `${percent*100}%`);
         player.seekTo(player.getDuration() * percent, false)
