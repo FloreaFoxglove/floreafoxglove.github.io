@@ -200,8 +200,8 @@ const setLoopWithButton = function (el) {
 }
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
-        if (e.type === 'touchmove'){
-            let touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        if (e.type == 'touchmove'){
+            let touch = e.touches[0] || e.changedTouches[0];
             clickPosition = touch - bounds.left
             alert(clickPosition)
         }else{
@@ -420,7 +420,7 @@ $(document).on("click", ".c.restart", function () {
 const scrubVideo = function () {
     const scrubMove = function (e) {
         if (e.type == 'touchmove'){
-            let touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            let touch = e.touches[0] || e.changedTouches[0];
             clickPosition = touch - bounds.left
         }else{
             clickPosition = e.pageX - bounds.left;
