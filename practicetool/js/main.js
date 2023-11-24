@@ -35,9 +35,9 @@ $("button.tools").on("click", function () {
 
 function onYouTubeIframeAPIReady() {
     let id
-    if (localStorage.getItem("last-id")){
+    if (localStorage.getItem("last-id")) {
         id = localStorage.getItem("last-id")
-    }else{
+    } else {
         id = '8QFdjDeSXHk';
     }
     player = new YT.Player('player', {
@@ -204,31 +204,25 @@ const setLoopWithSlider = function (el) {
         val = clamp(0, 1, (clickPosition / scrubberWidth));
         $(el).css("--time", `${val*100}%`);
     }
-    
-    const end = function(){
+
+    const end = function () {
         setLoopTime(val * 100, el);
-        $(document).off("mousemove");
-        $(document).off("touchmove");
-        $(document).off("mouseup");
-        $(document).off("touchend");
-    }
     
+        document.removeEventListener("touchmove", setLoopSlider)
+        document.removeEventListener("touchend", end)
+        document.removeEventListener("mousemove", setLoopSlider)
+        document.removeEventListener("mouseup", end)
+    }
+
     let val = getPlayPercent(loop[el]) / 100;
     let bounds = $("#scrubber")[0].getBoundingClientRect();
     let scrubberWidth = bounds.right - bounds.left;
     let clickPosition;
-    $(document).on("mousemove", function (event) {
-        setLoopSlider(event);
-    })
-    $(document).on("touchmove", function (event) {
-        setLoopSlider(event);
-    })
-    $(document).on("mouseup", function () {
-        end()
-    })
-    $(document).on("touchend", function () {
-        end()
-    })
+    
+    document.addEventListener("mousemove", setLoopSlider)
+    document.addEventListener("mouseup", end)
+    document.addEventListener("touchmove", setLoopSlider)
+    document.addEventListener("touchend", end)
 }
 
 $("button.time.start").on("click", function () {
@@ -245,18 +239,24 @@ $(".loop-indicator.end").on("mousedown", function () {
     setLoopWithSlider(".end")
 })
 
-// document.querySelectorAll(".loop-indicator.start").forEach((item) => {
-//     item.addEventListener("touchstart", function () {
-//         setLoopWithSlider(".start")
-//     })
-// });
+document.querySelectorAll(".loop-indicator.start").forEach((item) => {
+    item.addEventListener("touchstart", function () {
+        setLoopWithSlider(".start")
+    })
+});
 
-$(".loop-indicator.start").on("touchstart", function () {
-    setLoopWithSlider(".start")
-})
-$(".loop-indicator.end").on("touchstart", function () {
-    setLoopWithSlider(".end")
-})
+document.querySelectorAll(".loop-indicator.end").forEach((item) => {
+    item.addEventListener("touchstart", function () {
+        setLoopWithSlider(".end")
+    })
+});
+
+// $(".loop-indicator.start").on("touchstart", function () {
+//     setLoopWithSlider(".start")
+// })
+// $(".loop-indicator.end").on("touchstart", function () {
+//     setLoopWithSlider(".end")
+// })
 
 $("#looprest").on("change", function () {
     loop["rest"] = $("#looprest").val()
@@ -310,9 +310,9 @@ function speedup() {
         loops["current"] += 1
         if (loops["current"] >= loops["max"]) {
             loops["current"] = 0;
-            
+
             let newspeed = Math.round((parseFloat($("#playback-speed").val()) + parseFloat($("#speed-rate").val())) * 10) / 10
-            if (newspeed > 1){
+            if (newspeed > 1) {
                 newspeed = 1;
             }
             $("#playback-speed").val(String(newspeed)).change()
@@ -360,9 +360,9 @@ const playTimer = function () {
             if (player.getCurrentTime() >= (loop[".end"])) {
                 loops["playing"] = true;
                 restartAndLoop();
-                setTimeout(()=>{
+                setTimeout(() => {
                     loops["playing"] = false;
-                },3000)
+                }, 3000)
             }
         }, 500);
     }
@@ -425,37 +425,30 @@ const scrubVideo = function () {
         if (currentPlayState == 1) {
             player.playVideo();
         }
-        $(document).off("mousemove");
-        $(document).off("mouseup");
-        $(document).off("touchmove");
-        $(document).off("touchend");
-    }
     
+        document.removeEventListener("mousemove", scrubMove);
+        document.removeEventListener("mouseup", scrubOff);
+        document.removeEventListener("touchmove", scrubMove);
+        document.removeEventListener("touchend", scrubOff);
+    }
+
     let currentPlayState = player.getPlayerState();
     let bounds = $("#scrubber")[0].getBoundingClientRect();
     let scrubberWidth = bounds.right - bounds.left;
     let clickPosition;
     let percent;
-    $(document).on("mousemove", function (event) {
-        scrubMove(event)
-    })
-    $(document).on("mouseup", function () {
-        scrubOff()
-    })
-    $(document).on("touchmove", function (event) {
-        scrubMove(event)
-    })
-    $(document).on("touchend", function () {
-        scrubOff()
-    })
+
+    document.addEventListener("touchmove", scrubMove)
+    document.addEventListener("touchend", scrubOff)
+    document.addEventListener("mousemove", scrubMove)
+    document.addEventListener("mouseup", scrubOff)
 }
 
+document.querySelector("#scrubberButton").addEventListener("touchstart", scrubVideo)
 $(document).on("mousedown", "#scrubberButton", function () {
     scrubVideo()
 })
-$(document).on("touchstart", "#scrubberButton", function () {
-    scrubVideo()
-})
+
 
 
 
