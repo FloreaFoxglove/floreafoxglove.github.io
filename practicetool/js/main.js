@@ -200,22 +200,23 @@ const setLoopWithButton = function (el) {
 }
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
-        if (e.type == 'touchmove'){
-            alert("yo")
-            let touch = e.touches[0] || e.changedTouches[0];
-            clickPosition = touch.pageX - bounds.left
-            alert(clickPosition)
-        }else{
-            clickPosition = e.pageX - bounds.left;
-        }
+        clickPosition = e.pageX - bounds.left;
+        val = clamp(0, 1, (clickPosition / scrubberWidth));
+        $(el).css("--time", `${val*100}%`);
+    }
+
+    const setLoopSliderTouch = function (e) {
+        let touch = e.touches[0] || e.changedTouches[0];
+        clickPosition = touch.pageX - bounds.left
+
         val = clamp(0, 1, (clickPosition / scrubberWidth));
         $(el).css("--time", `${val*100}%`);
     }
 
     const end = function () {
         setLoopTime(val * 100, el);
-    
-        document.removeEventListener("touchmove", setLoopSlider)
+
+        document.removeEventListener("touchmove", setLoopSliderTouch)
         document.removeEventListener("touchend", end)
         document.removeEventListener("mousemove", setLoopSlider)
         document.removeEventListener("mouseup", end)
@@ -225,10 +226,10 @@ const setLoopWithSlider = function (el) {
     let bounds = $("#scrubber")[0].getBoundingClientRect();
     let scrubberWidth = bounds.right - bounds.left;
     let clickPosition;
-    
+
     document.addEventListener("mousemove", setLoopSlider)
     document.addEventListener("mouseup", end)
-    document.addEventListener("touchmove", setLoopSlider)
+    document.addEventListener("touchmove", setLoopSliderTouch)
     document.addEventListener("touchend", end)
 }
 
@@ -420,28 +421,28 @@ $(document).on("click", ".c.restart", function () {
 // scrubber stuff
 const scrubVideo = function () {
     const scrubMove = function (e) {
-        if (e.type == 'touchmove'){
-            let touch = e.touches[0] || e.changedTouches[0];
-            clickPosition = touch.pageX - bounds.left
-        }else{
-            clickPosition = e.pageX - bounds.left;
-        }
-
+        clickPosition = e.pageX - bounds.left;
         percent = clamp(0, 1, (clickPosition / scrubberWidth));
         $("#scrubberButton").css("--progress", `${percent*100}%`);
         player.seekTo(player.getDuration() * percent, false)
     }
-
+    const scrubMoveTouch = function (e) {
+        let touch = e.touches[0] || e.changedTouches[0];
+        clickPosition = touch.pageX - bounds.left
+        percent = clamp(0, 1, (clickPosition / scrubberWidth));
+        $("#scrubberButton").css("--progress", `${percent*100}%`);
+        player.seekTo(player.getDuration() * percent, false)
+    }
     const scrubOff = function () {
         $("#scrubberButton").css("--progress", `${percent*100}%`);
         player.seekTo(player.getDuration() * percent, true);
         if (currentPlayState == 1) {
             player.playVideo();
         }
-    
+
         document.removeEventListener("mousemove", scrubMove);
         document.removeEventListener("mouseup", scrubOff);
-        document.removeEventListener("touchmove", scrubMove);
+        document.removeEventListener("touchmove", scrubMoveTouch);
         document.removeEventListener("touchend", scrubOff);
     }
 
@@ -451,7 +452,7 @@ const scrubVideo = function () {
     let clickPosition;
     let percent;
 
-    document.addEventListener("touchmove", scrubMove)
+    document.addEventListener("touchmove", scrubMoveTouch)
     document.addEventListener("touchend", scrubOff)
     document.addEventListener("mousemove", scrubMove)
     document.addEventListener("mouseup", scrubOff)
