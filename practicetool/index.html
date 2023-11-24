@@ -19,8 +19,8 @@
             <!-- background -->
             <div class="background">
                 <div class="bg-pattern"></div>
-                <div class="side"></div>
-                <div class="side"></div>
+                <div class="side hidden"></div>
+                <div class="side hidden"></div>
                 <div class="fg-pattern"></div>
             </div>
 
@@ -35,7 +35,9 @@
                                 <div id="player-content">
                                     <div id="player"></div>
                                     <div id="rest-display" class="hidden">
-                                        <div class="banner"><h2>0</h2></div>
+                                        <div class="banner">
+                                            <h2>0</h2>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -43,10 +45,14 @@
                                 <!-- add frame advance and frame return -->
                                 <div class="c loop-count hidden">3</div>
                                 <div class="c frame-prev"><i class="fa-solid fa-backward-step"></i></div>
-                                <div class="c restart"><i class="fa-solid fa-rotate"></i><span class="hidden">Loop</span></div>
+                                <div class="c restart"><i class="fa-solid fa-rotate"></i><span
+                                        class="hidden">Loop</span></div>
                                 <!-- when in fullscreen, show time it will jump to -->
                                 <div class="c play"><i class="fa-solid fa-play"></i><i
                                         class="fa-solid fa-pause hidden"></i></div>
+
+                                <div class="c countdown"><i class="fa-regular fa-clock"></i></div>
+
                                 <div class="c fullscreen"><i class="fa-solid fa-expand"></i></div>
                                 <div class="c frame-next"><i class="fa-solid fa-forward-step"></i></div>
                                 <div id="scrubber">
@@ -106,23 +112,23 @@
                                 <h3>Speed</h3>
                                 <h3>Speed</h3>
                                 <div class="close"><i class="fa-solid fa-xmark"></i></div>
-                                    <span>Playback Speed</span>
-                                    <select id="playback-speed">
-                                        <option value="0.1">10%</option>
-                                        <option value="0.2">20%</option>
-                                        <option value="0.3">30%</option>
-                                        <option value="0.4">40%</option>
-                                        <option value="0.5">50%</option>
-                                        <option value="0.6">60%</option>
-                                        <option value="0.7">70%</option>
-                                        <option value="0.8">80%</option>
-                                        <option value="0.9">90%</option>
-                                        <option value="1" selected>100%</option>
-                                        <option value="1.25">125%</option>
-                                        <option value="1.5">150%</option>
-                                        <option value="1.75">175%</option>
-                                        <option value="2">200%</option>
-                                    </select>
+                                <span>Playback Speed</span>
+                                <select id="playback-speed">
+                                    <option value="0.1">10%</option>
+                                    <option value="0.2">20%</option>
+                                    <option value="0.3">30%</option>
+                                    <option value="0.4">40%</option>
+                                    <option value="0.5">50%</option>
+                                    <option value="0.6">60%</option>
+                                    <option value="0.7">70%</option>
+                                    <option value="0.8">80%</option>
+                                    <option value="0.9">90%</option>
+                                    <option value="1" selected>100%</option>
+                                    <option value="1.25">125%</option>
+                                    <option value="1.5">150%</option>
+                                    <option value="1.75">175%</option>
+                                    <option value="2">200%</option>
+                                </select>
                                 <div class="loopspeed opt disabled">
                                     <div class="opt">
                                         <span>Speed up after loops:</span>
@@ -156,20 +162,49 @@
 
                     </div>
                 </div>
-                <!-- <button class="tools">More Tools</button> -->
+                <button class="tools">Tools & Hints</button>
             </div>
 
         </main>
-        <!-- <nav data-active="false">
+        <nav data-active="false">
             <ul>
+                <h4>Tools:</h4>
+                <li>
+                    Theme: <select id="theme-select">
+                        <option value="light">Basic Light</option>
+                        <option value="dark">Basic Dark</option>
+                        <option value="ace">Ace (Cherish)</option>
+                    </select>
+                </li>
+            </ul>
+            <!-- <ul>
                 <li>
                     <a href="#__BLANK">Metronome</a>
                 </li>
                 <li>
                     <a href="#__BLANK">Tutorials</a>
                 </li>
+            </ul> -->
+            <hr>
+            <ul>
+                <h4>Keyboard Shortcuts:</h4>
+                <li>
+                    Spacebar: Play/Pause
+                </li>
+                <li>
+                    R: Restart/Loop
+                </li>
+                <li>
+                    F: Fullscreen
+                </li>
+                <li>
+                    N: Next Frame
+                </li>
+                <li>
+                    P: Previous Frame
+                </li>
             </ul>
-        </nav> -->
+        </nav>
     </div>
 
     <script src="js/themes.js"></script>

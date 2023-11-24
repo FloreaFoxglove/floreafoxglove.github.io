@@ -390,6 +390,35 @@ $(document).on("click", ".c.play", function () {
     }
 })
 
+$(document).on("click", ".c.countdown", function () {
+    flipPlaybackSymbol()
+    player.pauseVideo()
+    restInterval = 10;
+    if (restInterval > 0) {
+        $("#rest-display").removeClass("hidden")
+        $("#rest-display h2").text(restInterval)
+        let pause = setInterval(() => {
+            current_sound.play();
+            current_sound = ticksound2 ? ticksound : ticksound2
+            restInterval -= 1;
+            $("#rest-display h2").text(restInterval)
+            if (restInterval < 1) {
+                speedup()
+                clearInterval(pause)
+                pause = false
+                player.seekTo(loop[".start"])
+                player.playVideo()
+                restInterval = 0
+                $("#rest-display").addClass("hidden")
+            }
+        }, 1000);
+    } else {
+        player.seekTo(loop[".start"])
+        player.playVideo()
+        speedup()
+    }
+})
+
 // fullscreen
 $(document).on("click", ".c.fullscreen", function () {
     $("#optionContainer").toggleClass("fullscreen")
@@ -417,6 +446,7 @@ $(document).on("click", ".c.restart", function () {
         player.seekTo(loop[".start"])
     }
 })
+
 
 // scrubber stuff
 const scrubVideo = function () {
@@ -487,3 +517,44 @@ const playerStateChange = function () {
     }
     flipPlaybackSymbol();
 }
+
+
+
+
+
+
+
+// keyboard shortcuts
+
+
+document.addEventListener("keypress", function(event){
+    if (event.key == "r"){ // restart
+        if (loop["active"] == false) {
+            player.seekTo(0)
+        } else {
+            player.seekTo(loop[".start"])
+        }
+    }else if (event.key == " "){ // pause/play
+        flipPlaybackSymbol()
+        if (player.getPlayerState() != 1) {
+            player.playVideo()
+            playTimer()
+        } else {
+            player.pauseVideo()
+            clearInterval(playInterval)
+            playInterval = false
+        }
+        event.preventDefault()
+    }else if (event.key == "n"){ // next frame
+        player.seekTo(player.getCurrentTime() + (1 / 59));
+        $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
+    }else if (event.key == "b"){ // "back" frame
+        player.seekTo(player.getCurrentTime() - (1 / 59));
+        $("#scrubberButton").css("--progress", `${player.getCurrentTime()/player.getDuration() * 100}%`);
+    }else if (event.key == "f") { // fullscreen
+        $("#optionContainer").toggleClass("fullscreen")
+        $(".outerCard.play").toggleClass("fullscreen")
+        $("button.tools").toggleClass("fullscreen")
+    }
+
+})

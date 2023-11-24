@@ -10,14 +10,14 @@
 }
 
 :root {
-    --theme-bg-primary: #1d1d1d;
+    --theme-bg-primary: black;
     --theme-bg-secondary: black;
-    --theme-fg-primary: #912717;
-    --theme-fg-secondary: #D33E25;
-    --theme-txt-primary: #d4d4d4;
-    --theme-bg-pattern: url("../img/card.png");
-    --theme-fg-pattern: url("../img/noise.png");
-    --theme-font-h-primary: chinyen;
+    --theme-fg-primary: black;
+    --theme-fg-secondary: black;
+    --theme-txt-primary: black;
+    --theme-bg-pattern: unset;
+    --theme-fg-pattern: unset;
+    --theme-font-h-primary: sans-serif;
     --theme-font-p: monospace
 }
 
