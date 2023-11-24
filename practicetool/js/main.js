@@ -200,12 +200,10 @@ const setLoopWithButton = function (el) {
 }
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
-        alert(e.type)
-        if (String(e.type) == 'touchmove'){
+        if (e.type === 'touchmove'){
             let touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
             clickPosition = touch - bounds.left
-            alert(touch)
-            alert("yo")
+            alert(clickPosition)
         }else{
             clickPosition = e.pageX - bounds.left;
         }
