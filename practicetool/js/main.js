@@ -208,9 +208,9 @@ const setLoopWithSlider = function (el) {
     const end = function(){
         setLoopTime(val * 100, el);
         $(document).off("mousemove");
-        $(document).off("vmousemove");
+        $(document).off("touchmove");
         $(document).off("mouseup");
-        $(document).off("vmouseup");
+        $(document).off("touchup");
     }
     
     let val = getPlayPercent(loop[el]) / 100;
@@ -220,18 +220,16 @@ const setLoopWithSlider = function (el) {
     $(document).on("mousemove", function (event) {
         setLoopSlider(event);
     })
-    $(document).on("vmousemove", function (event) {
+    $(document).on("touchmove", function (event) {
         setLoopSlider(event);
     })
     $(document).on("mouseup", function () {
         end()
     })
-    $(document).on("vmouseup", function () {
+    $(document).on("touchup", function () {
         end()
     })
 }
-
-
 
 $("button.time.start").on("click", function () {
     setLoopWithButton(".start")
@@ -247,10 +245,10 @@ $(".loop-indicator.end").on("mousedown", function () {
     setLoopWithSlider(".end")
 })
 
-$(".loop-indicator.start").on("vmousedown", function () {
+$(".loop-indicator.start").on("touchdown", function () {
     setLoopWithSlider(".start")
 })
-$(".loop-indicator.end").on("vmousedown", function () {
+$(".loop-indicator.end").on("touchdown", function () {
     setLoopWithSlider(".end")
 })
 
@@ -423,8 +421,8 @@ const scrubVideo = function () {
         }
         $(document).off("mousemove");
         $(document).off("mouseup");
-        $(document).off("vmousemove");
-        $(document).off("vmouseup");
+        $(document).off("touchmove");
+        $(document).off("touchup");
     }
     
     let currentPlayState = player.getPlayerState();
@@ -438,10 +436,10 @@ const scrubVideo = function () {
     $(document).on("mouseup", function () {
         scrubOff()
     })
-    $(document).on("vmousemove", function (event) {
+    $(document).on("touchmove", function (event) {
         scrubMove(event)
     })
-    $(document).on("vmouseup", function () {
+    $(document).on("touchup", function () {
         scrubOff()
     })
 }
@@ -449,7 +447,7 @@ const scrubVideo = function () {
 $(document).on("mousedown", "#scrubberButton", function () {
     scrubVideo()
 })
-$(document).on("vmousedown", "#scrubberButton", function () {
+$(document).on("touchdown", "#scrubberButton", function () {
     scrubVideo()
 })
 
