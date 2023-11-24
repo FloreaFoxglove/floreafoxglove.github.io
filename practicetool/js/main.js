@@ -201,6 +201,7 @@ const setLoopWithButton = function (el) {
 const setLoopWithSlider = function (el) {
     const setLoopSlider = function (e) {
         if (e.type == 'touchmove'){
+            alert("yo")
             let touch = e.touches[0] || e.changedTouches[0];
             clickPosition = touch - bounds.left
             alert(clickPosition)
