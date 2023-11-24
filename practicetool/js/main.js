@@ -208,9 +208,9 @@ const setLoopWithSlider = function (el) {
     const end = function(){
         setLoopTime(val * 100, el);
         $(document).off("mousemove");
-        $(document).off("tapmove");
+        $(document).off("touchmove");
         $(document).off("mouseup");
-        $(document).off("tapend");
+        $(document).off("touchend");
     }
     
     let val = getPlayPercent(loop[el]) / 100;
@@ -220,13 +220,13 @@ const setLoopWithSlider = function (el) {
     $(document).on("mousemove", function (event) {
         setLoopSlider(event);
     })
-    $(document).on("tapmove", function (event) {
+    $(document).on("touchmove", function (event) {
         setLoopSlider(event);
     })
     $(document).on("mouseup", function () {
         end()
     })
-    $(document).on("tapend", function () {
+    $(document).on("touchend", function () {
         end()
     })
 }
@@ -245,10 +245,16 @@ $(".loop-indicator.end").on("mousedown", function () {
     setLoopWithSlider(".end")
 })
 
-$(".loop-indicator.start").on("tapstart", function () {
+// document.querySelectorAll(".loop-indicator.start").forEach((item) => {
+//     item.addEventListener("touchstart", function () {
+//         setLoopWithSlider(".start")
+//     })
+// });
+
+$(".loop-indicator.start").on("touchstart", function () {
     setLoopWithSlider(".start")
 })
-$(".loop-indicator.end").on("tapstart", function () {
+$(".loop-indicator.end").on("touchstart", function () {
     setLoopWithSlider(".end")
 })
 
@@ -421,8 +427,8 @@ const scrubVideo = function () {
         }
         $(document).off("mousemove");
         $(document).off("mouseup");
-        $(document).off("tapmove");
-        $(document).off("tapend");
+        $(document).off("touchmove");
+        $(document).off("touchend");
     }
     
     let currentPlayState = player.getPlayerState();
@@ -436,10 +442,10 @@ const scrubVideo = function () {
     $(document).on("mouseup", function () {
         scrubOff()
     })
-    $(document).on("tapmove", function (event) {
+    $(document).on("touchmove", function (event) {
         scrubMove(event)
     })
-    $(document).on("tapend", function () {
+    $(document).on("touchend", function () {
         scrubOff()
     })
 }
@@ -447,7 +453,7 @@ const scrubVideo = function () {
 $(document).on("mousedown", "#scrubberButton", function () {
     scrubVideo()
 })
-$(document).on("tapstart", "#scrubberButton", function () {
+$(document).on("touchstart", "#scrubberButton", function () {
     scrubVideo()
 })
 
